@@ -1,0 +1,6 @@
+#make sure eol is LF
+* text eol=lf
+
+*.png binary
+*.jpg binary
+*.ico binary
