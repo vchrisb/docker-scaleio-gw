@@ -11,7 +11,7 @@ fi
 
 # add MDM IP adresses
 if [ -v MDM1_IP_ADDRESS ] && [ -v MDM2_IP_ADDRESS ]; then
-	  echo "Adding MDM1 and MDM2 IP addresses"
+	echo "Adding MDM1 and MDM2 IP addresses"
 	sed -i "s/mdm.ip.addresses=.*/mdm.ip.addresses=$MDM1_IP_ADDRESS,$MDM2_IP_ADDRESS/" /opt/emc/scaleio/gateway/webapps/ROOT/WEB-INF/classes/gatewayUser.properties
 fi
 
