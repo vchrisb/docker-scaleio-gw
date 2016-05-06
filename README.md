@@ -50,3 +50,12 @@ export GW_KEY=$(cat key.pem | sed ':a;N;$!ba;s/\n/\\n/g')
 export GW_CRT=$(cat cert.pem | sed ':a;N;$!ba;s/\n/\\n/g')
 export ROOT_CRT=$(cat root.cer | sed ':a;N;$!ba;s/\n/\\n/g')
 ```
+
+## DC/OS with RexRay
+
+RexRay, a vendor agnostic storage orchestration engine supported by DC/OS, requires a high available connection to the ScaleIO Gateway if using ScaleIO as a storage provider. Normally runnig the gateway on a host makes it harder to maintain the installation and making the gateway redundant. Running the ScaleIO gateway as a container in Mesos makes it much easier to achieve these goals.
+The gateway can be reached from within the mesos cluster via `<scaleio-gw name>.marathon.mesos`. To be able to know the the port of the container, you have to use currently a defined `host port`. Using a `VIP`is investigated.  
+Please have a look at the sample marathon file `scaleio-gw.json`.
+
+
+
