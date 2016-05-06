@@ -5,8 +5,8 @@ if [ -v GW_PASSWORD ]; then
 	echo "Configuring gateway password"
 	/opt/emc/scaleio/gateway/bin/SioGWTool.sh --reset_password --password $GW_PASSWORD --config_file /opt/emc/scaleio/gateway/webapps/ROOT/WEB-INF/classes/gatewayUser.properties
 else
-	echo "no gateway password specified!"
-	exit 1
+	echo "Configuring default gateway password: Scaleio123"
+	/opt/emc/scaleio/gateway/bin/SioGWTool.sh --reset_password --password Scaleio123 --config_file /opt/emc/scaleio/gateway/webapps/ROOT/WEB-INF/classes/gatewayUser.properties
 fi
 
 # add MDM IP adresses
@@ -31,7 +31,7 @@ if [ -v GW_CRT ] && [ -v GW_KEY ]; then
 	echo -e "$GW_KEY\n$GW_CRT" | openssl pkcs12 -export -out certificate.pfx -passout pass:$KEYSTORE_PASS
 	keytool -importkeystore -deststorepass $KEYSTORE_PASS -destkeypass $KEYSTORE_PASS -srckeystore certificate.pfx -srcstoretype PKCS12 -srcstorepass $KEYSTORE_PASS -destkeystore $KEYSTORE
 else
-	echo "Generating GW cert:"
+	echo "Generating GW cert"
 	keytool -genkey -alias "Scaleio_Gateway" -dname "OU=ASD, O=EMC, C=US, ST=Massachusetts, L=Hopkinton, CN=Scaleio_Gateway" -keyalg RSA -validity 360 -keysize 2048 -storepass $KEYSTORE_PASS -keypass $KEYSTORE_PASS -keystore $KEYSTORE
 fi
 
