@@ -1,7 +1,7 @@
 FROM centos:latest
 MAINTAINER Christopher Banck <christopher@banck.net>
 
-RUN yum -y update && yum -y install java-1.8.0-openjdk which bsdtar
+RUN yum -y update && yum -y install java-1.8.0-openjdk which bsdtar openssl
 
 RUN cd /tmp && \
 	curl http://downloads.emc.com/emc-com/usa/ScaleIO/ScaleIO_Linux_v2.0.zip \
