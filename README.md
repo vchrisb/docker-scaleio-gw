@@ -46,8 +46,8 @@ export MDM2_CRT=$(ssh -qt $MDM2_IP_ADDRESS sudo cat /opt/emc/scaleio/mdm/cfg/mdm
 ### public certificates
 
 ```
-export GW_KEY=$(cat key.pem | sed ':a;N;$!ba;s/\n/\\n/g')
-export GW_CRT=$(cat cert.pem | sed ':a;N;$!ba;s/\n/\\n/g')
+export GW_KEY=$(cat certificate.key | sed ':a;N;$!ba;s/\n/\\n/g')
+export GW_CRT=$(cat certificate.crt | sed ':a;N;$!ba;s/\n/\\n/g')
 export ROOT_CRT=$(cat root.cer | sed ':a;N;$!ba;s/\n/\\n/g')
 ```
 
@@ -57,5 +57,12 @@ RexRay, a vendor agnostic storage orchestration engine supported by DC/OS, requi
 The gateway can be reached from within the mesos cluster via `<scaleio-gw name>.marathon.mesos`. To be able to know the the port of the container, you have to use currently a defined `host port`. Using a `VIP`is investigated.  
 Please have a look at the sample marathon file `scaleio-gw.json`.
 
-
+#### certificates
+It makes sense to have a common certificate When running multiple instances of scaleio-gw.  
+An easy way to create a self-signed certificate is:
+```
+openssl req -x509 -sha256 -newkey rsa:2048 -keyout certificate.key -out certificate.crt -days 1024 -nodes -subj '/CN=scaleio-gw.marathon.mesos'
+export GW_KEY=$(cat certificate.key | sed ':a;N;$!ba;s/\n/\\n/g')
+export GW_CRT=$(cat certificate.crt | sed ':a;N;$!ba;s/\n/\\n/g')
+```
 
