@@ -9,10 +9,8 @@ This image runs EMC ScaleIO as a container.
 The following environment variables are also honored for configuring your ScaleIO Gateway instance:
 * `-e GW_PASSWORD=` (Gateway password, defaults to `Scaleio123`)
 * `-e MDM1_IP_ADDRESS=` and `-e MDM2_IP_ADDRESS=` (MDM IP addresses)
-* `-e MDM1_CRT=` and `-e MDM2_CRT=` (MDM public certificates to be added to the `truststore`)
-* `-e GW_KEY=` and `-e GW_CRT=` (certifcate public and private key to be used)
-* `-e ROOT_CRT=` (public root certificate authority certificate to be added to the `truststore`)
-* `-e INTERMEDIATE_CRT=` (public intermediate certificate authority certificate to be added to the `truststore`)
+* `-e TRUST_MDM_CRT=` (if variable is set with a non empty value will the MDM certifates being trusted)
+* `-e GW_KEY=` and `-e GW_CRT=` (public certifcate and private key to be used)
 * `-e BYPASS_CRT_CHECK=` (if variable is set with a non empty value will the certificate check for the MDMs bypassed)
 
 ### Examples
@@ -22,34 +20,6 @@ The following environment variables are also honored for configuring your ScaleI
 ```docker run -d --name=scaleio-gw --restart=always -p 443:443 -e GW_PASSWORD=Scaleio123 -e MDM1_IP_ADDRESS=$MDM1_IP_ADDRESS -e MDM2_IP_ADDRESS=$MDM2_IP_ADDRESS -e MDM1_CRT="$MDM1_CRT" -e MDM2_CRT="$MDM2_CRT" vchrisb/scaleio-gw```
 
 ```docker run -d --name scaleio-gw --restart=always -p 443:443 -e GW_PASSWORD=Scaleio123 -e MDM1_IP_ADDRESS=$MDM1_IP_ADDRESS -e MDM2_IP_ADDRESS=$MDM2_IP_ADDRESS -e MDM1_CRT="$MDM1_CRT" -e MDM2_CRT="$MDM2_CRT" -e GW_KEY="$GW_KEY" -e GW_CRT="$GW_CRT" -e ROOT_CRT="$ROOT_CRT" -e INTERMEDIATE_CRT="$INTERMEDIATE_CRT" vchrisb/scaleio-gw```
-
-## certificates
-
-### MDM certificates
-
-Following commands can be used to get the `MDM1`and `MDM2` self-signed certificates:
-```
-export MDM1_IP_ADDRESS=x.x.x.x
-export MDM2_IP_ADDRESS=x.x.x.x
-export MDM1_CRT=$(ssh -q $MDM1_IP_ADDRESS sudo cat /opt/emc/scaleio/mdm/cfg/mdm_management_certificate.pem | sed -n -e '/-----BEGIN CERTIFICATE-----/,$p' | sed ':a;N;$!ba;s/\n/\\n/g')
-export MDM2_CRT=$(ssh -q $MDM2_IP_ADDRESS sudo cat /opt/emc/scaleio/mdm/cfg/mdm_management_certificate.pem | sed -n -e '/-----BEGIN CERTIFICATE-----/,$p' | sed ':a;N;$!ba;s/\n/\\n/g')
-```
-
-If `requiretty` is not enabled in sudoers, please use following commands instead:
-```
-export MDM1_IP_ADDRESS=x.x.x.x  
-export MDM2_IP_ADDRESS=x.x.x.x  
-export MDM1_CRT=$(ssh -qt $MDM1_IP_ADDRESS sudo cat /opt/emc/scaleio/mdm/cfg/mdm_management_certificate.pem | sed -n -e '/-----BEGIN CERTIFICATE-----/,$p' | tr -d "\r" | sed ':a;N;$!ba;s/\n/\\n/g')
-export MDM2_CRT=$(ssh -qt $MDM2_IP_ADDRESS sudo cat /opt/emc/scaleio/mdm/cfg/mdm_management_certificate.pem | sed -n -e '/-----BEGIN CERTIFICATE-----/,$p' | tr -d "\r" | sed ':a;N;$!ba;s/\n/\\n/g')
-```
-
-### public certificates
-
-```
-export GW_KEY=$(cat certificate.key | sed ':a;N;$!ba;s/\n/\\n/g')
-export GW_CRT=$(cat certificate.crt | sed ':a;N;$!ba;s/\n/\\n/g')
-export ROOT_CRT=$(cat root.cer | sed ':a;N;$!ba;s/\n/\\n/g')
-```
 
 ## DC/OS with RexRay
 
