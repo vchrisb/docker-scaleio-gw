@@ -59,17 +59,24 @@ if [ -v MDM1_IP_ADDRESS ] && [ -v MDM2_IP_ADDRESS ]; then
 	TOKEN=$(curl --silent --insecure --user admin:$GW_PASSWORD https://localhost/api/gatewayLogin  | sed 's:^.\(.*\).$:\1:')
 	if [ -v TRUST_MDM_CRT ]; then
 		echo "trust MDM1 host certificate"
-		curl --silent --insecure  --user :$TOKEN -X GET https://localhost/api/getHostCertificate/Mdm?host=$MDM1_IP_ADDRESS > /tmp/mdm.cer
-		curl --silent --insecure --user :$TOKEN -X POST -H "Content-Type: multipart/form-data" -F "file=@/tmp/mdm.cer" https://localhost/api/trustHostCertificate/Mdm
+		curl --silent --show-error --insecure --user :$TOKEN -X GET https://localhost/api/getHostCertificate/Mdm?host=$MDM1_IP_ADDRESS > /tmp/mdm.cer
+		curl --silent --show-error --insecure --user :$TOKEN -X POST -H "Content-Type: multipart/form-data" -F "file=@/tmp/mdm.cer" https://localhost/api/trustHostCertificate/Mdm
 		echo "trust MDM2 host certificate"
-		curl --silent --insecure  --user :$TOKEN -X GET https://localhost/api/getHostCertificate/Mdm?host=$MDM2_IP_ADDRESS> /tmp/mdm.cer
-		curl --silent --insecure --user :$TOKEN -X POST -H "Content-Type: multipart/form-data" -F "file=@/tmp/mdm.cer" https://localhost/api/trustHostCertificate/Mdm
+		curl --silent --show-error --insecure --user :$TOKEN -X GET https://localhost/api/getHostCertificate/Mdm?host=$MDM2_IP_ADDRESS> /tmp/mdm.cer
+		curl --silent --show-error --insecure --user :$TOKEN -X POST -H "Content-Type: multipart/form-data" -F "file=@/tmp/mdm.cer" https://localhost/api/trustHostCertificate/Mdm
+	elif [ -v MDM1_CRT ] && [ -v MDM2_CRT ]; then
+		echo "trust provided MDM1 host certificate"
+		echo -e "$MDM1_CRT" > /tmp/mdm.cer
+		curl --silent --show-error --insecure --user :$TOKEN -X POST -H "Content-Type: multipart/form-data" -F "file=@/tmp/mdm.cer" https://localhost/api/trustHostCertificate/Mdm
+		echo "trust provided MDM2 host certificate"
+		echo -e "$MDM2_CRT" > /tmp/mdm.cer
+		curl --silent --show-error --insecure --user :$TOKEN -X POST -H "Content-Type: multipart/form-data" -F "file=@/tmp/mdm.cer" https://localhost/api/trustHostCertificate/Mdm
 	fi
 	echo "Adding MDM1 and MDM2 IP addresses to gateway configuration"
 	CONTENT='{"mdmAddresses":["'$MDM1_IP_ADDRESS'", "'$MDM2_IP_ADDRESS'"]}'
-	curl --silent --insecure --user :$TOKEN -X POST -H "Content-Type: application/json" -d "${CONTENT}" https://localhost/api/updateConfiguration
+	curl --silent --show-error --insecure --user :$TOKEN -X POST -H "Content-Type: application/json" -d "${CONTENT}" https://localhost/api/updateConfiguration
 	#logout
-	curl --silent --insecure --user :$TOKEN https://localhost/api/gatewayLogout
+	curl --silent --show-error --insecure --user :$TOKEN https://localhost/api/gatewayLogout
 fi
 
 wait $PID
