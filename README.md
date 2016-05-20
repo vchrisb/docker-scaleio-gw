@@ -58,3 +58,11 @@ RexRay, a vendor agnostic storage orchestration engine supported by DC/OS, requi
 The gateway can be reached from within the mesos cluster via `<scaleio-gw name>.marathon.mesos`. To be able to know the the port of the container, you have to use currently a defined `host port`. Using a `VIP`is investigated.  
 Please have a look at the sample marathon file `scaleio-gw.json`.
 
+## Support
+
+If you need generic help with the ScaleIO Gateway please reach out to the [ScaleIO Community ](https://community.emc.com/community/products/scaleio)  or the [EMC CodeCommunity](http://community.emccode.com/) on Slack in the `scaleio_rest`channel.
+For problems or questions regarding the Docker Image please report an issue on [GitHub](https://github.com/vchrisb/docker-scaleio-gw/issues).
+
+## Disclaimer
+
+This is not an official EMC product/solution. Use at your own risk!
