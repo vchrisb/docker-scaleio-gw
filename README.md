@@ -20,6 +20,11 @@ The following environment variables are also honored for configuring your ScaleI
 
 ```docker run -d --name scaleio-gw --restart=always -p 443:443 -e GW_PASSWORD=Scaleio123 -e MDM1_IP_ADDRESS=192.168.100.1 -e MDM2_IP_ADDRESS=192.168.100.2 -e TRUST_MDM_CRT=true -e GW_KEY="$GW_KEY" -e GW_CRT="$GW_CRT" vchrisb/scaleio-gw```
 
+### Docker Tags
+
+* latest -> v2.0.0.1
+* v2.0.0.1
+
 ## certificates
 
 #### Gateway certificate
