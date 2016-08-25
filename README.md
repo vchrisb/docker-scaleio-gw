@@ -1,4 +1,4 @@
-# docker-scaleio-gw [![](https://imagelayers.io/badge/vchrisb/scaleio-gw:latest.svg)](https://imagelayers.io/?images=vchrisb/scaleio-gw:latest 'Get your own badge on imagelayers.io')
+# docker-scaleio-gw [![](https://images.microbadger.com/badges/image/vchrisb/scaleio-gw.svg)](https://microbadger.com/images/vchrisb/scaleio-gw "Get your own image badge on microbadger.com")
 
 This image runs EMC ScaleIO as a container.
 
