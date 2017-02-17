@@ -65,6 +65,32 @@ RexRay, a vendor agnostic storage orchestration engine supported by DC/OS, requi
 The gateway can be reached from within the mesos cluster via `<scaleio-gw name>.marathon.mesos`. To be able to know the the port of the container, you have to use currently a defined `host port`. Using a `VIP`is investigated.  
 Please have a look at the sample marathon file `scaleio-gw.json`.
 
+## Docker Swarm with RexRay
+
+When using Docker Swarm with RexRay and ScaleIO, it is desired to have a high available ScaleIO Gateway.
+One can start the ScaleIO Gateway Docker image on the swarm cluster with following command.
+`sudo docker service create --replicas 2 --name=scaleio-gw -p 8443:443 -e GW_PASSWORD=<gw password> -e MDM1_IP_ADDRESS=<mdm1 ip address> -e MDM2_IP_ADDRESS=<mdm2 ip address> -e TRUST_MDM_CRT=true vchrisb/scaleio-gw`
+The gateway is reachable by accessing any of the swarm nodes on port `8443`. This is possible by swarms network feature.
+An example RexRay configuration could look like:
+
+```
+libstorage:
+  service: scaleio
+scaleio:
+  endpoint: https://127.0.0.1:8443/api
+  insecure: true
+  usecerts: true
+  userName: admin
+  password: Scaleio123
+  systemName: Vagrant
+  protectionDomainName: pd1
+  storagePoolName: sp1
+  thinOrThick: ThinProvisioned
+```
+
+For testing the scaleio gateway docker image with docker swarm, you can try out [vagrant-swarm](https://github.com/vchrisb/vagrant-swarm)
+
+
 ## Support
 
 If you need generic help with the ScaleIO Gateway please reach out to the [ScaleIO Community ](https://community.emc.com/community/products/scaleio)  or the [EMC CodeCommunity](http://community.emccode.com/) on Slack in the `scaleio_rest`channel.
