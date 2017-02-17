@@ -22,7 +22,8 @@ The following environment variables are also honored for configuring your ScaleI
 
 ### Docker Tags
 
-* latest -> v2.0.0.2
+* latest -> v2.0.1.2
+* v2.0.1.2
 * v2.0.0.2
 * v2.0.0.1
 
@@ -63,6 +64,32 @@ export MDM2_CRT=$(ssh -qt $MDM2_IP_ADDRESS sudo cat /opt/emc/scaleio/mdm/cfg/mdm
 RexRay, a vendor agnostic storage orchestration engine supported by DC/OS, requires a high available connection to the ScaleIO Gateway if using ScaleIO as a storage provider. Normally runnig the gateway on a host makes it harder to maintain the installation and making the gateway redundant. Running the ScaleIO gateway as a container in Mesos makes it much easier to achieve these goals.
 The gateway can be reached from within the mesos cluster via `<scaleio-gw name>.marathon.mesos`. To be able to know the the port of the container, you have to use currently a defined `host port`. Using a `VIP`is investigated.  
 Please have a look at the sample marathon file `scaleio-gw.json`.
+
+## Docker Swarm with RexRay
+
+When using Docker Swarm with RexRay and ScaleIO, it is desired to have a high available ScaleIO Gateway.
+One can start the ScaleIO Gateway Docker image on the swarm cluster with following command.
+`sudo docker service create --replicas 2 --name=scaleio-gw -p 8443:443 -e GW_PASSWORD=<gw password> -e MDM1_IP_ADDRESS=<mdm1 ip address> -e MDM2_IP_ADDRESS=<mdm2 ip address> -e TRUST_MDM_CRT=true vchrisb/scaleio-gw`
+The gateway is reachable by accessing any of the swarm nodes on port `8443`. This is possible by swarms network feature.
+An example RexRay configuration could look like:
+
+```
+libstorage:
+  service: scaleio
+scaleio:
+  endpoint: https://127.0.0.1:8443/api
+  insecure: true
+  usecerts: true
+  userName: admin
+  password: Scaleio123
+  systemName: Vagrant
+  protectionDomainName: pd1
+  storagePoolName: sp1
+  thinOrThick: ThinProvisioned
+```
+
+For testing the scaleio gateway docker image with docker swarm, you can try out [vagrant-swarm](https://github.com/vchrisb/vagrant-swarm)
+
 
 ## Support
 
